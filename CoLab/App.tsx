@@ -1,6 +1,4 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
  *
  * @format
  */
@@ -17,13 +15,7 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 type SectionProps = PropsWithChildren<{
   title: string;
