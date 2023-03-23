@@ -10,6 +10,7 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import QuestionScreen from './screens/QnA/QuestionScreen';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -37,7 +38,7 @@ const Routes = () => {
       <Stack.Navigator>
         <Stack.Screen
           name="Initial"
-          component={MembersScreen}
+          component={QuestionScreen}
           options={Header}
           //   options={{ headerShown: false }}
         />
@@ -74,6 +75,11 @@ const Routes = () => {
         <Stack.Screen
           name="ProfileScreen"
           component={ProfileScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="QuestionScreen"
+          component={QuestionScreen}
           options={Header}
         />
       </Stack.Navigator>
