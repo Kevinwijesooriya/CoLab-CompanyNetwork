@@ -9,18 +9,31 @@ import {
 } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseApp } from '../../../firebaseConfig';
+import { AddMember } from '../../services/AuthService';
 
 const NewMemberScreen = () => {
   const auth = getAuth(firebaseApp);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [position, setPosition] = useState('');
+  const [companyName, setCompanyName] = useState('Hatchyard');
   const [error, setError] = useState(null);
 
-  const handleLogin = async () => {
+  const handleAddMember = async () => {
+    let payload = {
+      name,
+      email,
+      password,
+      position,
+      companyName,
+    };
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await AddMember(payload);
+      console.log('User added to Firestore', response);
     } catch (error) {
-      setError(error.message);
+      setError('Error adding user to Firestore');
+      console.error('Error adding user to Firestore: ', error);
     }
   };
 
@@ -35,8 +48,8 @@ const NewMemberScreen = () => {
           style={styles.input}
           placeholder="Name"
           placeholderTextColor="#B5B5B5"
-          onChangeText={text => setEmail(text)}
-          value={email}
+          onChangeText={text => setName(text)}
+          value={name}
           autoCapitalize="none"
           keyboardType="email-address"
         />
@@ -44,8 +57,8 @@ const NewMemberScreen = () => {
           style={styles.input}
           placeholder="Position"
           placeholderTextColor="#B5B5B5"
-          onChangeText={text => setEmail(text)}
-          value={email}
+          onChangeText={text => setPosition(text)}
+          value={position}
           autoCapitalize="none"
           keyboardType="email-address"
         />
@@ -67,7 +80,7 @@ const NewMemberScreen = () => {
           secureTextEntry
         />
         {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity style={styles.button} onPress={handleAddMember}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
@@ -103,6 +116,7 @@ const styles = StyleSheet.create({
     color: '#323232',
     backgroundColor: '#ffffff90',
     marginBottom: 38,
+    borderRadius: 5,
   },
   input: {
     backgroundColor: '#EFEFEF',
