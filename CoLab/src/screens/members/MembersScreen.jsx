@@ -10,6 +10,7 @@ import {
 import FloatingButton from '../core/components/FloatingButton';
 import { useNavigation } from '@react-navigation/native';
 import { fetchUsers } from '../../services/AuthService';
+import { useIsFocused } from '@react-navigation/core';
 
 const MembersScreen = () => {
   const membersInitialState = [
@@ -21,19 +22,23 @@ const MembersScreen = () => {
     },
   ];
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [members, setMembers] = React.useState(membersInitialState);
-  React.useEffect(() => {
-    async function fetchMembers() {
-      try {
-        const usersArray = await fetchUsers();
-        setMembers(usersArray);
-      } catch (error) {
-        console.error('Error fetching members: ', error);
-      }
+  async function fetchMembers() {
+    try {
+      const usersArray = await fetchUsers();
+      setMembers(usersArray);
+    } catch (error) {
+      console.error('Error fetching members: ', error);
     }
-
+  }
+  React.useEffect(() => {
     fetchMembers();
   }, []);
+
+  React.useEffect(() => {
+    fetchMembers();
+  }, [isFocused]);
 
   const handleCardPress = member => {
     navigation.navigate('ProfileScreen', member);
@@ -41,7 +46,14 @@ const MembersScreen = () => {
   const Card = ({ member }) => (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => handleCardPress(member)}>
-        <Image source={{ uri: member.imageUrl }} style={styles.cardImage} />
+        <Image
+          source={{
+            uri:
+              member.imageUrl ||
+              'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+          }}
+          style={styles.cardImage}
+        />
         <Text style={styles.cardTitle}>{member.name}</Text>
         <Text style={styles.cardSubtitle}>{member.position}</Text>
       </TouchableOpacity>
@@ -105,9 +117,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardImage: {
-    height: 200,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    alignSelf: 'center',
   },
   cardTitle: {
     margin: 16,
