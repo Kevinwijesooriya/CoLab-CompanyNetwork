@@ -4,14 +4,14 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 const FloatingButton = props => {
-  const { text, icon, navigateTo } = props;
-  const navigate = useNavigation();
+  const { text, icon, navigateTo, params } = props;
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigate.push(navigateTo)}>
+        onPress={() => navigation.navigate(navigateTo, params)}>
         <Icon name={icon} size={24} color="#FFF" />
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>

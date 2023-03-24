@@ -1,15 +1,24 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Linking,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
+import Icon from 'react-native-vector-icons/AntDesign';
 
-const ProfileScreen = () => {
-  const profile = {
-    name: 'John Doe',
-    position: 'CEO',
-    email: 'johndoe@example.com',
-    project: 'Product Launch',
-    image:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+const ProfileScreen = ({ route }) => {
+  console.log(
+    '🚀 ~ file: ProfileScreen.jsx:6 ~ ProfileScreen ~ props:',
+    route.params,
+  );
+  const profile = route.params;
+  const handlePress = async url => {
+    await Linking.openURL(url);
   };
 
   return (
@@ -18,13 +27,17 @@ const ProfileScreen = () => {
         text="Change Details"
         icon="edit"
         navigateTo="MemberUpdateScreen"
+        params={profile.uid}
       />
       <View style={styles.container}>
         <View style={styles.profileHeader}>
           <Text style={styles.profileName}>User Profile</Text>
         </View>
         <View style={styles.profileHeader}>
-          <Image source={{ uri: profile.image }} style={styles.profileImage} />
+          <Image
+            source={{ uri: profile.imageUrl }}
+            style={styles.profileImage}
+          />
           <View>
             <Text style={styles.profileName}>{profile.name}</Text>
             <Text style={styles.profilePosition}>{profile.position}</Text>
@@ -38,6 +51,14 @@ const ProfileScreen = () => {
           <View style={styles.profileItem}>
             <Text style={styles.profileLabel}>Ongoing Project</Text>
             <Text style={styles.profileValue}>{profile.project}</Text>
+          </View>
+          <View style={styles.profileItem}>
+            <TouchableOpacity
+              style={styles.profileItemSocial}
+              onPress={() => handlePress(profile.linkedIn)}>
+              <Text style={styles.profileLabel}>LinkedIn Profile</Text>
+              <Icon name="linkedin-square" size={24} color="#0077b5" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -94,6 +115,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#fff',
     elevation: 2,
+  },
+  profileItemSocial: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: '#fff',
   },
   profileLabel: {
     fontSize: 18,
