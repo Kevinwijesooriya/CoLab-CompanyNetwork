@@ -9,93 +9,41 @@ import {
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import { useNavigation } from '@react-navigation/native';
-
-const members = [
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Alice Johnson',
-    position: 'COO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Alice Johnson',
-    position: 'COO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-];
+import { fetchUsers } from '../../services/AuthService';
 
 const MembersScreen = () => {
+  const membersInitialState = [
+    {
+      name: 'Name',
+      position: 'Position',
+      imageUrl:
+        'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+    },
+  ];
   const navigation = useNavigation();
-  const handleCardPress = () => {
-    navigation.navigate('ProfileScreen');
+  const [members, setMembers] = React.useState(membersInitialState);
+  React.useEffect(() => {
+    async function fetchMembers() {
+      try {
+        const usersArray = await fetchUsers();
+        setMembers(usersArray);
+      } catch (error) {
+        console.error('Error fetching members: ', error);
+      }
+    }
+
+    fetchMembers();
+  }, []);
+
+  const handleCardPress = member => {
+    navigation.navigate('ProfileScreen', member);
   };
-  const Card = ({ name, position, imageUrl }) => (
+  const Card = ({ member }) => (
     <View style={styles.card}>
-      <TouchableOpacity onPress={() => handleCardPress()}>
-        <Image source={{ uri: imageUrl }} style={styles.cardImage} />
-        <Text style={styles.cardTitle}>{name}</Text>
-        <Text style={styles.cardSubtitle}>{position}</Text>
+      <TouchableOpacity onPress={() => handleCardPress(member)}>
+        <Image source={{ uri: member.imageUrl }} style={styles.cardImage} />
+        <Text style={styles.cardTitle}>{member.name}</Text>
+        <Text style={styles.cardSubtitle}>{member.position}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -113,7 +61,7 @@ const MembersScreen = () => {
           <Text style={styles.title}>Our Team</Text>
         </View>
         {members.map((member, index) => (
-          <Card key={index} {...member} />
+          <Card key={index} member={member} />
         ))}
       </ScrollView>
     </>
