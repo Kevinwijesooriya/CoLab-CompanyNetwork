@@ -7,29 +7,49 @@ import {
   View,
   Image,
 } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { firebaseApp } from '../../../firebaseConfig';
-import { AddMember } from '../../services/AuthService';
+import { fetchUser, updateUser } from '../../services/AuthService';
 
-const NewMemberScreen = () => {
-  const auth = getAuth(firebaseApp);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const MemberUpdateScreen = ({ route }) => {
+  console.log(
+    '🚀 ~ file: MemberUpdateScreen.jsx:14 ~ MemberUpdateScreen ~ route.params:',
+    route.params,
+  );
+  const uid = route.params;
+
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
-  const [companyName, setCompanyName] = useState('Hatchyard');
+  const [project, setProject] = useState('');
+  const [linkedIn, setLinkedIn] = useState('');
   const [error, setError] = useState(null);
 
   const handleAddMember = async () => {
     let payload = {
       name,
-      email,
-      password,
       position,
-      companyName,
+      project,
+      linkedIn,
     };
-    AddMember(payload);
+    updateUser(uid, payload);
   };
+  React.useEffect(() => {
+    async function fetchMember() {
+      try {
+        const usersArray = await fetchUser(uid);
+        setName(usersArray.name);
+        setPosition(usersArray.position);
+        {
+          usersArray.project && setProject(usersArray.project);
+        }
+        {
+          usersArray.linkedIn && setLinkedIn(usersArray.linkedIn);
+        }
+      } catch (error) {
+        console.error('Error fetching members: ', error);
+      }
+    }
+
+    fetchMember();
+  }, []);
 
   return (
     <>
@@ -37,8 +57,10 @@ const NewMemberScreen = () => {
         <Image source={require('../../assets/Team.png')} style={styles.image} />
       </View>
       <View style={styles.container}>
-        <Text style={styles.title}>New Member</Text>
+        <Text style={styles.title}>Update Profile</Text>
+        <Text style={styles.label}>Name</Text>
         <TextInput
+          mode="outlined"
           style={styles.input}
           placeholder="Name"
           placeholderTextColor="#B5B5B5"
@@ -47,6 +69,7 @@ const NewMemberScreen = () => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
+        <Text style={styles.label}>Position</Text>
         <TextInput
           style={styles.input}
           placeholder="Position"
@@ -56,26 +79,28 @@ const NewMemberScreen = () => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
+        <Text style={styles.label}>Current Project</Text>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Current Project"
           placeholderTextColor="#B5B5B5"
-          onChangeText={text => setEmail(text)}
-          value={email}
+          onChangeText={text => setProject(text)}
+          value={project}
           autoCapitalize="none"
           keyboardType="email-address"
         />
+        <Text style={styles.label}>LinkedIn Profile</Text>
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="LinkedIn Profile"
           placeholderTextColor="#B5B5B5"
-          onChangeText={text => setPassword(text)}
-          value={password}
-          secureTextEntry
+          onChangeText={text => setLinkedIn(text)}
+          value={linkedIn}
+          keyboardType="email-address"
         />
         {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={handleAddMember}>
-          <Text style={styles.buttonText}>Add</Text>
+          <Text style={styles.buttonText}>Save Changes</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -84,7 +109,7 @@ const NewMemberScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 4,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -111,6 +136,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff90',
     marginBottom: 38,
     borderRadius: 5,
+  },
+  label: {
+    fontFamily: 'Hind Mysuru',
+    fontSize: 12,
+    fontWeight: '300',
+    fontStyle: 'normal',
+    lineHeight: 12,
+    letterSpacing: 0.5,
+    color: '#B5B5B5',
+    borderRadius: 5,
+    width: 327,
+    paddingHorizontal: 10,
   },
   input: {
     backgroundColor: '#EFEFEF',
@@ -144,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewMemberScreen;
+export default MemberUpdateScreen;

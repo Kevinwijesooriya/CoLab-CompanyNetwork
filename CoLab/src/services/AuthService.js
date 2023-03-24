@@ -5,19 +5,18 @@ import {
   doc,
   setDoc,
   getDocs,
+  getDoc,
   onSnapshot,
   updateDoc,
+  query,
+  where,
 } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { firebaseApp } from '../../firebaseConfig';
-
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { firebaseAuth, firestoreDB } from '../../firebaseConfig';
 
 export const AddAdmin = payload => {
   const { email, password, role, companyName } = payload;
-  createUserWithEmailAndPassword(auth, email, password)
+  createUserWithEmailAndPassword(firebaseAuth, email, password)
     .then(async userCredential => {
       const user = userCredential.user;
       const uid = user.uid;
@@ -28,7 +27,7 @@ export const AddAdmin = payload => {
         companyName: companyName,
       };
       try {
-        await setDoc(doc(db, 'users', uid), docData);
+        await setDoc(doc(firestoreDB, 'users', uid), docData);
         console.log('User added to Firestore');
       } catch (error) {
         console.error('Error adding user to Firestore: ', error);
@@ -43,7 +42,7 @@ export const AddMember = async payload => {
   try {
     console.log('~ AddMember ~ payload:', payload);
     const userCredential = await createUserWithEmailAndPassword(
-      auth,
+      firebaseAuth,
       email,
       password,
     );
@@ -59,7 +58,10 @@ export const AddMember = async payload => {
       companyName: companyName,
     };
     try {
-      const userDocRef = await addDoc(collection(db, 'users'), docData);
+      const userDocRef = await addDoc(
+        collection(firestoreDB, 'users'),
+        docData,
+      );
       console.log(`User created with ID: ${uid}`);
       console.log(`User document created with ID: ${userDocRef.id}`);
     } catch (error) {
@@ -69,3 +71,82 @@ export const AddMember = async payload => {
     console.error('Error creating user: ', error);
   }
 };
+
+export async function addUserHelper(payload) {
+  const docData = {
+    email: payload.email,
+    role: 'claimsAdmin',
+    companyName: payload.companyName,
+  };
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    await addDoc(usersCollection, docData);
+    console.log('New user added successfully.');
+  } catch (error) {
+    console.error('Error adding user: ', error);
+    throw error;
+  }
+}
+export async function fetchUser(uid) {
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    const userQuery = query(usersCollection, where('uid', '==', uid));
+    const userSnapshot = await getDocs(userQuery);
+    if (userSnapshot.empty) {
+      throw new Error(`User with uid ${uid} does not exist.`);
+    }
+    const user = userSnapshot.docs[0].data();
+    return user;
+  } catch (error) {
+    console.error(`Error fetching user with uid ${uid}: `, error);
+    throw error;
+  }
+}
+
+export async function fetchUsers() {
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    const usersSnapshot = await getDocs(usersCollection);
+    const usersArray = usersSnapshot.docs.map(doc => doc.data());
+    return usersArray;
+  } catch (error) {
+    console.error('Error fetching users: ', error);
+    throw error;
+  }
+}
+
+export async function updateUser(userId, userData) {
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    const userQuery = query(usersCollection, where('uid', '==', userId));
+    const userSnapshot = await getDocs(userQuery);
+    if (userSnapshot.empty) {
+      throw new Error(`No user found with uid ${userId}.`);
+    }
+    const userDoc = userSnapshot.docs[0];
+    const userRef = doc(firestoreDB, 'users', userDoc.id);
+    await updateDoc(userRef, userData);
+    console.log(`User with uid ${userId} updated successfully.`);
+  } catch (error) {
+    console.error(`Error updating user with uid ${userId}: `, error);
+    throw error;
+  }
+}
+
+export async function deleteUser(uid) {
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    const userQuery = query(usersCollection, where('uid', '==', uid));
+    const userSnapshot = await getDocs(userQuery);
+    if (userSnapshot.empty) {
+      throw new Error(`No user found with uid ${uid}.`);
+    }
+    const userDoc = userSnapshot.docs[0];
+    const userRef = doc(firestoreDB, 'users', userDoc.id);
+    await deleteDoc(userRef);
+    console.log(`User with uid ${uid} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting user with uid ${uid}: `, error);
+    throw error;
+  }
+}
