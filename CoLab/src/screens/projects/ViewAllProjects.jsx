@@ -9,93 +9,52 @@ import {
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import { useNavigation } from '@react-navigation/native';
+import { fetchProjects } from '../../services/ProjectService';
 
-const members = [
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'John Doe',
-    position: 'CEO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Jane Doe',
-    position: 'CTO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Alice Johnson',
-    position: 'COO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-  {
-    name: 'Bob Smith',
-    position: 'CFO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-  },
-  {
-    name: 'Alice Johnson',
-    position: 'COO',
-    imageUrl:
-      'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-];
-
-const ViewAllProjects = () => {
+const MembersScreen = () => {
+  const projectInitialState = [
+    {
+        projectName: 'projectName',
+        estimatedTime: 'estimatedTime',
+        technologies: 'technologies',
+        teamMembers: 'teamMembers',
+        description: 'description',
+        projectStatus: 'projectStatus',
+        clinent: 'clinent',
+        // imageUrl:
+        // 'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+    },
+  ];
   const navigation = useNavigation();
-  const handleCardPress = () => {
-    navigation.navigate('ProfileScreen');
+  const [projects, setProject] = React.useState(projectInitialState);
+  React.useEffect(() => {
+    async function fetchMembers() {
+      try {
+        const projectArray = await fetchProjects();
+        console.log("console log:",projectArray)
+        setProject(projectArray);
+      } catch (error) {
+        console.error('Error fetching project: ', error);
+      }
+    }
+
+    fetchMembers();
+  }, []);
+
+  const handleCardPress = project => {
+    navigation.navigate('ProjectScreen', project);
   };
-  const Card = ({ name, position, imageUrl }) => (
+  const Card = ({ project }) => (
     <View style={styles.card}>
-      <TouchableOpacity onPress={() => handleCardPress()}>
-        <Image source={{ uri: imageUrl }} style={styles.cardImage} />
-        <Text style={styles.cardTitle}>{name}</Text>
-        <Text style={styles.cardSubtitle}>{position}</Text>
+      <TouchableOpacity onPress={() => handleCardPress(project)}>
+        {/* <Image source={{ uri: project.imageUrl }} style={styles.cardImage} /> */}
+        <Text style={styles.cardTitle}>{project.projectName}</Text>
+        <Text style={styles.cardSubtitle}>{project.estimatedTime}</Text>
+        <Text style={styles.cardSubtitle}>{project.technologies}</Text>
+        <Text style={styles.cardSubtitle}>{project.teamMembers}</Text>
+        <Text style={styles.cardSubtitle}>{project.description}</Text>
+        <Text style={styles.cardSubtitle}>{project.projectStatus}</Text>
+        <Text style={styles.cardSubtitle}>{project.clinent}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -103,17 +62,17 @@ const ViewAllProjects = () => {
   return (
     <>
       <FloatingButton
-        text="Add Member"
+        text="Add project"
         icon="adduser"
-        navigateTo="NewMemberScreen"
+        navigateTo="NewProject"
       />
 
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Our Team</Text>
+          <Text style={styles.title}>projects</Text>
         </View>
-        {members.map((member, index) => (
-          <Card key={index} {...member} />
+        {projects.map((project, index) => (
+          <Card key={index} project={project} />
         ))}
       </ScrollView>
     </>
@@ -150,7 +109,7 @@ const styles = StyleSheet.create({
     color: '#323232',
   },
   card: {
-    width: '48%',
+    width: '100%',
     marginBottom: 16,
     borderRadius: 8,
     backgroundColor: '#fff',
@@ -175,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ViewAllProjects;
+export default MembersScreen;

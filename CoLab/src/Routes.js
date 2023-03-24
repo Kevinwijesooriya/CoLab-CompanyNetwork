@@ -12,6 +12,8 @@ import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
 import ViewAllProjects from './screens/projects/ViewAllProjects';
 import NewProject from './screens/projects/AddProjectScreen';
+import ProjectScreen from './screens/projects/projectScreen';
+import UpdateProjectScreen from './screens/projects/UpdateProject';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -39,7 +41,7 @@ const Routes = () => {
       <Stack.Navigator>
         <Stack.Screen
           name="Initial"
-          component={MembersScreen}
+          component={ViewAllProjects}
           options={Header}
           //   options={{ headerShown: false }}
         />
@@ -79,8 +81,18 @@ const Routes = () => {
           options={Header}
         />
          <Stack.Screen
-          name="ViewAllProjects"
-          component={ViewAllProjects}
+          name="ProjectScreen"
+          component={ProjectScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="NewProject"
+          component={NewProject}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdateProjectScreen"
+          component={UpdateProjectScreen}
           options={Header}
         />
         
