@@ -7,12 +7,11 @@ import {
   View,
   Image,
 } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { firebaseApp } from '../../../firebaseConfig';
 import { AddMember } from '../../services/AuthService';
+import { useNavigation } from '@react-navigation/native';
 
 const NewMemberScreen = () => {
-  const auth = getAuth(firebaseApp);
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -28,7 +27,12 @@ const NewMemberScreen = () => {
       position,
       companyName,
     };
-    AddMember(payload);
+    try {
+      await AddMember(payload);
+      navigation.navigate('MembersScreen');
+    } catch (error) {
+      setError('Ops! Something Went Wrong');
+    }
   };
 
   return (
@@ -73,6 +77,9 @@ const NewMemberScreen = () => {
           value={password}
           secureTextEntry
         />
+        {/* <TouchableOpacity style={styles.button} onPress={handleAddMember}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity> */}
         {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={handleAddMember}>
           <Text style={styles.buttonText}>Add</Text>

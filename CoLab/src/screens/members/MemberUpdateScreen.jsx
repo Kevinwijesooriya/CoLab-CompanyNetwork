@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -10,11 +11,8 @@ import {
 import { fetchUser, updateUser } from '../../services/AuthService';
 
 const MemberUpdateScreen = ({ route }) => {
-  console.log(
-    '🚀 ~ file: MemberUpdateScreen.jsx:14 ~ MemberUpdateScreen ~ route.params:',
-    route.params,
-  );
-  const uid = route.params;
+  const navigation = useNavigation();
+  const profile = route.params;
 
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
@@ -22,19 +20,24 @@ const MemberUpdateScreen = ({ route }) => {
   const [linkedIn, setLinkedIn] = useState('');
   const [error, setError] = useState(null);
 
-  const handleAddMember = async () => {
+  const handleUpdateMember = async () => {
     let payload = {
       name,
       position,
       project,
       linkedIn,
     };
-    updateUser(uid, payload);
+    try {
+      await updateUser(profile.uid, payload);
+      navigation.navigate('ProfileScreen', profile);
+    } catch (error) {
+      setError('Update Failed');
+    }
   };
   React.useEffect(() => {
     async function fetchMember() {
       try {
-        const usersArray = await fetchUser(uid);
+        const usersArray = await fetchUser(profile.uid);
         setName(usersArray.name);
         setPosition(usersArray.position);
         {
@@ -99,7 +102,7 @@ const MemberUpdateScreen = ({ route }) => {
           keyboardType="email-address"
         />
         {error && <Text style={styles.error}>{error}</Text>}
-        <TouchableOpacity style={styles.button} onPress={handleAddMember}>
+        <TouchableOpacity style={styles.button} onPress={handleUpdateMember}>
           <Text style={styles.buttonText}>Save Changes</Text>
         </TouchableOpacity>
       </View>
