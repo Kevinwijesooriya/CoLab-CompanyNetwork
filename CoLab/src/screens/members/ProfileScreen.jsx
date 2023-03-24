@@ -35,6 +35,7 @@ const ProfileScreen = ({ route }) => {
         icon="edit"
         navigateTo="MemberUpdateScreen"
         params={profile}
+      
       />
       <View style={styles.container}>
         <View style={styles.profileHeader}>

@@ -95,7 +95,11 @@ const Routes = () => {
           component={UpdateProjectScreen}
           options={Header}
         />
-        
+         <Stack.Screen
+          name="ViewAllProjects"
+          component={ViewAllProjects}
+          options={Header}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

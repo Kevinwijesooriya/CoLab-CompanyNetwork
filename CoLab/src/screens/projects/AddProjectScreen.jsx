@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Hind Mysuru',
-    fontSize: 38,
+    fontSize: 30,
     fontWeight: '300',
     fontStyle: 'normal',
     lineHeight: 38,

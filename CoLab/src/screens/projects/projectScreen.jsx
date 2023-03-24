@@ -10,16 +10,20 @@ import {
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { deleteProject } from '../../services/ProjectService';
+import { useNavigation } from '@react-navigation/native';
 
 const ProjectScreen = ({ route }) => {
-  console.log(
-    '🚀 ~ file: ProfileScreen.jsx:6 ~ ProfileScreen ~ props:',
-    route.params,
-  );
+  const navigation = useNavigation();
   const projectProfile = route.params;
   console.log(projectProfile)
-  const handlePress = async url => {
-    await Linking.openURL(url);
+  const handlePressRemove = async pid => {
+    try {
+      await deleteProject(pid);
+      navigation.navigate('ViewAllProjects');
+    } catch (error) {
+      console.log('Ops! Something Went Wrong', error);
+    }
   };
 
   return (
@@ -60,6 +64,14 @@ const ProjectScreen = ({ route }) => {
           <View style={styles.profileItem}>
           <Text style={styles.profileLabel}>client</Text>
           <Text style={styles.profileValue}>{projectProfile.clinent}</Text>
+          </View>
+          <View style={styles.profileItemRemove}>
+            <TouchableOpacity
+              style={styles.profileItemTouchRemove}
+              onPress={() => handlePressRemove(projectProfile.id)}>
+              <Text style={styles.profileLabelRemove}>Remove </Text>
+              <Icon name="deleteuser" size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -137,6 +149,34 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Hind Mysuru',
     color: '#323232',
+  },
+  profileItemRemove: {
+    padding: 16,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: 'red',
+    elevation: 2,
+  },
+  profileItemTouchRemove: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: 'red',
+  },
+  profileLabelRemove: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    width: '40%',
+    fontFamily: 'Hind Mysuru',
+    color: '#fff',
   },
 });
 

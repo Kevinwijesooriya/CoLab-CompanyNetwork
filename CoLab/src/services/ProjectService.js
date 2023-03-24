@@ -142,9 +142,9 @@ import {
     try {
       const projectRef = doc(firestoreDB, "project", pid);
       await deleteDoc(projectRef);
-      console.log(`Project with uid ${uid} deleted successfully.`);
+      console.log(`Project with uid ${pid} deleted successfully.`);
     } catch (error) {
-      console.error(`Error deleting project with uid ${pid}: `, error);
+      console.error(`Error deleting project with pid ${pid}: `, error);
       throw error;
     }
   }
