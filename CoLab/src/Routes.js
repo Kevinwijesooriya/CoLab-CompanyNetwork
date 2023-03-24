@@ -10,6 +10,8 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import ViewAllProjects from './screens/projects/ViewAllProjects';
+import NewProject from './screens/projects/AddProjectScreen';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -76,6 +78,12 @@ const Routes = () => {
           component={ProfileScreen}
           options={Header}
         />
+         <Stack.Screen
+          name="ViewAllProjects"
+          component={ViewAllProjects}
+          options={Header}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

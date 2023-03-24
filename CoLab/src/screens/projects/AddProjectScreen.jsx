@@ -5,7 +5,7 @@ import {
   View,
 } from 'react-native';
 
-const NewMemberScreen = () => {
+const NewProject = () => {
 
   return (
     <>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewMemberScreen;
+export default NewProject;
