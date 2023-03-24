@@ -10,15 +10,22 @@ import {
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { deleteUser } from '../../services/AuthService';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = ({ route }) => {
-  console.log(
-    '🚀 ~ file: ProfileScreen.jsx:6 ~ ProfileScreen ~ props:',
-    route.params,
-  );
+  const navigation = useNavigation();
   const profile = route.params;
-  const handlePress = async url => {
+  const handlePressLinkedIn = async url => {
     await Linking.openURL(url);
+  };
+  const handlePressRemove = async uid => {
+    try {
+      await deleteUser(uid);
+      navigation.navigate('MembersScreen');
+    } catch (error) {
+      console.log('Ops! Something Went Wrong', error);
+    }
   };
 
   return (
@@ -27,7 +34,7 @@ const ProfileScreen = ({ route }) => {
         text="Change Details"
         icon="edit"
         navigateTo="MemberUpdateScreen"
-        params={profile.uid}
+        params={profile}
       />
       <View style={styles.container}>
         <View style={styles.profileHeader}>
@@ -35,7 +42,11 @@ const ProfileScreen = ({ route }) => {
         </View>
         <View style={styles.profileHeader}>
           <Image
-            source={{ uri: profile.imageUrl }}
+            source={{
+              uri:
+                profile.imageUrl ||
+                'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+            }}
             style={styles.profileImage}
           />
           <View>
@@ -55,9 +66,17 @@ const ProfileScreen = ({ route }) => {
           <View style={styles.profileItem}>
             <TouchableOpacity
               style={styles.profileItemSocial}
-              onPress={() => handlePress(profile.linkedIn)}>
+              onPress={() => handlePressLinkedIn(profile.linkedIn)}>
               <Text style={styles.profileLabel}>LinkedIn Profile</Text>
               <Icon name="linkedin-square" size={24} color="#0077b5" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.profileItemRemove}>
+            <TouchableOpacity
+              style={styles.profileItemTouchRemove}
+              onPress={() => handlePressRemove(profile.uid)}>
+              <Text style={styles.profileLabelRemove}>Remove </Text>
+              <Icon name="deleteuser" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -116,6 +135,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
   },
+  profileItemRemove: {
+    padding: 16,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: 'red',
+    elevation: 2,
+  },
+  profileItemTouchRemove: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: 'red',
+  },
   profileItemSocial: {
     flexWrap: 'wrap',
     flexDirection: 'row',
@@ -131,6 +171,13 @@ const styles = StyleSheet.create({
     width: '40%',
     fontFamily: 'Hind Mysuru',
     color: '#323232',
+  },
+  profileLabelRemove: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    width: '40%',
+    fontFamily: 'Hind Mysuru',
+    color: '#fff',
   },
   profileValue: {
     fontSize: 18,
