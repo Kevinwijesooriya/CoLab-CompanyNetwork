@@ -14,6 +14,12 @@ import ViewAllProjects from './screens/projects/ViewAllProjects';
 import NewProject from './screens/projects/AddProjectScreen';
 import ProjectScreen from './screens/projects/projectScreen';
 import UpdateProjectScreen from './screens/projects/UpdateProject';
+import QuestionsScreen from './screens/QnA/QuestionsScreen';
+import QuestionScreen from './screens/QnA/QuestionScreen';
+import AddQuestionScreen from './screens/QnA/AddQuestionScreen';
+import UpdateQuestionScreen from './screens/QnA/UpdateQuestionScreen';
+import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
+// import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
 import AddPostScreen from './screens/post/AddPost';
 import ViewPostScreen from './screens/post/ViewPost';
 import PostScreen from './screens/post/PostScreen';
@@ -110,6 +116,36 @@ const Routes = () => {
           component={ViewAllProjects}
           options={Header}
         />
+        <Stack.Screen
+          name="QuestionsScreen"
+          component={QuestionsScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdateQuestionScreen"
+          component={UpdateQuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
+          name="AddQuestionScreen"
+          component={AddQuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
+          name="QuestionScreen"
+          component={QuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
+          name="AddAnswersScreen"
+          component={AddAnswersScreen}
+          options={Header}
+        />
+        {/* <Stack.Screen
+          name="AddAnswersScreen"
+          component={AddAnswersScreen}
+          options={Header}
+        /> */}
         <Stack.Screen
           name="AddPostScreen"
           component={AddPostScreen}
