@@ -10,6 +10,10 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import ViewAllProjects from './screens/projects/ViewAllProjects';
+import NewProject from './screens/projects/AddProjectScreen';
+import ProjectScreen from './screens/projects/projectScreen';
+import UpdateProjectScreen from './screens/projects/UpdateProject';
 import QuestionsScreen from './screens/QnA/QuestionsScreen';
 import QuestionScreen from './screens/QnA/QuestionScreen';
 import AddQuestionScreen from './screens/QnA/AddQuestionScreen';
@@ -20,6 +24,7 @@ import AddPostScreen from './screens/post/AddPost';
 import ViewPostScreen from './screens/post/ViewPost';
 import PostScreen from './screens/post/PostScreen';
 import UpdatePostScreen from './screens/post/UpdatePost';
+import MemberUpdateScreen from './screens/members/MemberUpdateScreen';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -46,9 +51,9 @@ const Routes = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Initial"
-          component={QuestionsScreen}
-          options={Header}
+          name="HomeScreen"
+          component={ViewPostScreen}
+          options={Header('Home')}
           //   options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -74,7 +79,7 @@ const Routes = () => {
         <Stack.Screen
           name="NewMemberScreen"
           component={NewMemberScreen}
-          options={Header}
+          options={Header('New Member')}
         />
         <Stack.Screen
           name="MembersScreen"
@@ -84,6 +89,31 @@ const Routes = () => {
         <Stack.Screen
           name="ProfileScreen"
           component={ProfileScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="MemberUpdateScreen"
+          component={MemberUpdateScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ProjectScreen"
+          component={ProjectScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="NewProject"
+          component={NewProject}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdateProjectScreen"
+          component={UpdateProjectScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ViewAllProjects"
+          component={ViewAllProjects}
           options={Header}
         />
         <Stack.Screen
@@ -136,7 +166,6 @@ const Routes = () => {
           component={UpdatePostScreen}
           options={Header}
         />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
