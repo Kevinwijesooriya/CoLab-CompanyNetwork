@@ -14,6 +14,10 @@ import ViewAllProjects from './screens/projects/ViewAllProjects';
 import NewProject from './screens/projects/AddProjectScreen';
 import ProjectScreen from './screens/projects/projectScreen';
 import UpdateProjectScreen from './screens/projects/UpdateProject';
+import AddPostScreen from './screens/post/AddPost';
+import ViewPostScreen from './screens/post/ViewPost';
+import PostScreen from './screens/post/PostScreen';
+import UpdatePostScreen from './screens/post/UpdatePost';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -100,6 +104,27 @@ const Routes = () => {
           component={ViewAllProjects}
           options={Header}
         />
+        <Stack.Screen
+          name="AddPostScreen"
+          component={AddPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ViewPostScreen"
+          component={ViewPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdatePostScreen"
+          component={UpdatePostScreen}
+          options={Header}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

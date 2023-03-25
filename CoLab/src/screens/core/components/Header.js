@@ -12,11 +12,13 @@ const handleSignOut = async () => {
     console.error('Error signing out: ', error);
   }
 };
-export const Header = {
-  headerTitle: 'CoLab',
+export const Header = title => ({
+  headerTitle: title || 'CoLab',
   headerRight: () => (
-    <TouchableOpacity onPress={handleSignOut}>
-      <Icon name="logout" size={24} color="#323232" />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity onPress={handleSignOut}>
+        <Icon name="logout" size={24} color="#323232" />
+      </TouchableOpacity>
+    </>
   ),
-};
+});

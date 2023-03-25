@@ -33,6 +33,7 @@ const ProfileScreen = ({ route }) => {
       };
       const imageUrl = await uploadImage(file);
       console.log('Upload success', imageUrl);
+      setFile(imageUrl);
       await updateUserProfile(profile.uid, imageUrl);
       console.log('Update profile info');
     } catch (error) {
