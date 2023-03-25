@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { getQuestionById, updateQuestion } from '../../services/QnAService';
+import { useNavigation } from '@react-navigation/native';
 
 const UpdateQuestionScreen = ({ route }) => {
   console.log(
@@ -15,19 +16,25 @@ const UpdateQuestionScreen = ({ route }) => {
     route.params,
   );
   const uid = route.params;
-  console.log("🚀 ~ file: UpdateQuestionScreen.jsx:18 ~ UpdateQuestionScreen ~ uid:", uid)
+  console.log(
+    '🚀 ~ file: UpdateQuestionScreen.jsx:18 ~ UpdateQuestionScreen ~ uid:',
+    uid,
+  );
 
   const [question, setQuestion] = useState('');
-  console.log("🚀 ~ file: UpdateQuestionScreen.jsx:20 ~ UpdateQuestionScreen ~ question:", question)
+  console.log(
+    '🚀 ~ file: UpdateQuestionScreen.jsx:20 ~ UpdateQuestionScreen ~ question:',
+    question,
+  );
   const [error, setError] = useState(null);
-
+  const navigation = useNavigation();
   const handleAddQuestion = async () => {
     let payload = {
-        question
+      question,
     };
 
     try {
-      const response = await updateQuestion(uid, payload);;
+      const response = await updateQuestion(uid, payload);
       console.log('Question added to Firestore', response);
       navigation.navigate('QuestionsScreen');
     } catch (error) {
@@ -67,7 +74,7 @@ const UpdateQuestionScreen = ({ route }) => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-        
+
         {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={handleAddQuestion}>
           <Text style={styles.buttonText}>Save Changes</Text>
