@@ -15,15 +15,26 @@ const UpdateQuestionScreen = ({ route }) => {
     route.params,
   );
   const uid = route.params;
+  console.log("🚀 ~ file: UpdateQuestionScreen.jsx:18 ~ UpdateQuestionScreen ~ uid:", uid)
 
   const [question, setQuestion] = useState('');
+  console.log("🚀 ~ file: UpdateQuestionScreen.jsx:20 ~ UpdateQuestionScreen ~ question:", question)
   const [error, setError] = useState(null);
 
   const handleAddQuestion = async () => {
     let payload = {
         question
     };
-    updateQuestion(uid, payload);
+
+    try {
+      const response = await updateQuestion(uid, payload);;
+      console.log('Question added to Firestore', response);
+      navigation.navigate('QuestionsScreen');
+    } catch (error) {
+      // setError('Error updating question to Firestore');
+      console.error('Error adding question to Firestore: ', error);
+      navigation.navigate('QuestionsScreen');
+    }
   };
   React.useEffect(() => {
     async function fetchQuestion() {

@@ -1,24 +1,37 @@
 import React from 'react'
-
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
+import { AddAnswer } from '../../../services/AnswerService';
 
-const AddAnswersScreen = () => {
+const AddAnswersScreen = ({ route }) => {
+  console.log("🚀 ~ file: AddAnswersScreen.jsx:14 ~ AddAnswersScreen ~ route:", route.params)
+  
     const auth = getAuth();
     const user = auth.currentUser;
     const uid = user.uid;
-    const [question, setQuestion] = useState('');
-    const [error, setError] = useState(null);
+    const profile =route.params
+    const [answer, setAnswer] = React.useState('');
+    const [error, setError] = React.useState(null);
     const navigation = useNavigation();
   
     const handleAddQuestion = async () => {
       let payload = {
         uid,
-        question,
+        answer,
+        Qid:"2FkU2QAuxCiUYTlrqifJ",
       };
       try {
-        const response = await AddQuestion(payload);
+        const response = await AddAnswer(payload);
         console.log('Question added to Firestore', response);
-        navigation.navigate('QuestionScreen');
+        navigation.navigate('QuestionScreen',profile);
       } catch (error) {
         setError('Error adding question to Firestore');
         console.error('Error adding question to Firestore: ', error);
@@ -30,13 +43,13 @@ const AddAnswersScreen = () => {
             {/* <Image source={require('../../assets/Team.png')} style={styles.image} /> */}
           </View>
           <View style={styles.container}>
-            <Text style={styles.title}>New Question</Text>
+            <Text style={styles.title}>Add Your Answer</Text>
             <TextInput
               style={styles.input}
-              placeholder="Question"
+              placeholder="Answer"
               placeholderTextColor="#B5B5B5"
-              onChangeText={text => setQuestion(text)}
-              value={question}
+              onChangeText={text => setAnswer(text)}
+              value={answer}
               autoCapitalize="none"
               keyboardType="email-address"
             />

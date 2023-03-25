@@ -27,7 +27,6 @@ const QuestionsScreen = () => {
     try {
       const questionsArray = await fetchQuestions();
       console.log("🚀 ~ file: questionScreen.jsx:28 ~ fetchQuestion ~ questionsArray:", questionsArray)
-   
       setQuestions(questionsArray);
     } catch (error) {
       console.error('Error fetching questions: ', error);

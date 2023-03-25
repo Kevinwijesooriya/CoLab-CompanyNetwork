@@ -14,6 +14,7 @@ import QuestionsScreen from './screens/QnA/QuestionsScreen';
 import QuestionScreen from './screens/QnA/QuestionScreen';
 import AddQuestionScreen from './screens/QnA/AddQuestionScreen';
 import UpdateQuestionScreen from './screens/QnA/UpdateQuestionScreen';
+import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
 // import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
 const Stack = createNativeStackNavigator();
 
@@ -99,6 +100,11 @@ const Routes = () => {
       <Stack.Screen
           name="QuestionScreen"
           component={QuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
+          name="AddAnswersScreen"
+          component={AddAnswersScreen}
           options={Header}
         />
         {/* <Stack.Screen

@@ -1,19 +1,28 @@
-import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { firestoreDB } from "../../firebaseConfig";
 
 export const AddAnswer = async payload => {
     const { answer,uid,Qid } = payload;
-    const docData = {
+     try {
+      const usersCollection = collection(firestoreDB, 'users');
+      const userQuery = query(usersCollection, where('uid', '==', uid));
+      const userSnapshot = await getDocs(userQuery);
+      if (userSnapshot.empty) {
+        throw new Error(`No user found with uid ${uid}.`);
+      }
+      const userDoc = userSnapshot.docs[0];
+
+      const docData = {
         uid,
         answer: answer,
+        username: userDoc.data().name,
         Qid,
 
-
       };
-      try {
-        const answerDocRef = await addDoc(collection(firestoreDB, 'answers'), docData);
+        const questionDocRef = await addDoc(collection(firestoreDB, 'answers'), docData);
+        console.log("🚀 ~ file: AnswerService.js:23 ~ AddAnswer ~ questionDocRef:", questionDocRef)
         console.log(`Question created with ID: ${uid}`);
-        console.log(`Question document created with ID: ${answerDocRef.id}`);
+        console.log(`Question document created with ID: ${questionDocRef.id}`);
       } catch (error) {
         console.error('Error creating question: ', error);
       }

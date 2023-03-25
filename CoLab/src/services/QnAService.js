@@ -3,7 +3,6 @@ import { firestoreDB } from "../../firebaseConfig";
 
 export const AddQuestion = async payload => {
     const { question,uid } = payload;
-   
       try {
       const usersCollection = collection(firestoreDB, 'users');
       const userQuery = query(usersCollection, where('uid', '==', uid));
@@ -49,16 +48,37 @@ export const AddQuestion = async payload => {
       try {
         const questionsCollection = collection(firestoreDB, 'questions');
         const questionsSnapshot = await getDocs(questionsCollection);
-        const questionsArray = questionsSnapshot.docs.map(doc => doc.data());
+        const questionsArray =[]
+        questionsSnapshot.docs.map(doc => { 
+          let questions = doc.data()
+          questions.id=doc.id
+          questionsArray.push(questions)
+        }
+        );
         return questionsArray;
+
+        // // const projectCollection = collection(firestoreDB, 'project');
+        // // const projectSnapshot = await getDocs(projectCollection);
+        // let projectArray =[]
+        // projectSnapshot.docs.map(doc => {
+        //   let projects = doc.data()
+        //   projects.id=doc.id
+        //   projectArray.push(projects)
+        // })
+        // return projectArray;
+
+
+
       } catch (error) {
         console.error('Error fetching questions: ', error);
         throw error;
       }
+        console.log("🚀 ~ file: QnAService.js:76 ~ fetchQuestions ~ questionsArray:", questionsArray)
+        console.log("🚀 ~ file: QnAService.js:76 ~ fetchQuestions ~ questionsArray:", questionsArray)
     }
     export async function updateQuestion(uid, dataToUpdate) {
       try {
-        const questionRef = doc(db, "questions", uid);
+        const questionRef = doc(firestoreDB, "questions", uid);
         await updateDoc(questionRef, dataToUpdate);
         console.log(`Question with uid ${uid} updated successfully.`);
       } catch (error) {

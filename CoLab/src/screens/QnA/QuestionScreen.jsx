@@ -19,8 +19,8 @@ const ProfileScreen = ({ route }) => {
     route.params,
   );
   const profile = route.params;
-  const handlePress = async url => {
-    await Linking.openURL(url);
+  const handlePress = (question) => {
+    navigation.navigate('UpdateQuestionScreen', question);
   };
 
   return (
@@ -29,11 +29,11 @@ const ProfileScreen = ({ route }) => {
         text="Add Answers"
         icon="edit"
         navigateTo="AddAnswersScreen"
-        // params={profile.question}
+        params={profile}
       />
       <View style={styles.container}>
         <View style={styles.profileHeader}>
-          <Text style={styles.profileName}>User Profile</Text>
+          <Text style={styles.profileName}>Question</Text>
         </View>
         <View style={styles.profileHeader}>
           <Image
@@ -48,7 +48,11 @@ const ProfileScreen = ({ route }) => {
         <View style={styles.profileDetails}>
           <View style={styles.profileItem}>
             {/* <Text style={styles.profileLabel}>Email</Text> */}
-            <Text style={styles.profileValue}>{profile.question}</Text>
+            <TouchableOpacity
+              style={styles.profileItemSocial}
+              onPress={() => handlePress(profile.id)}>
+              <Text style={styles.profileLabel}>{profile.question}</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.profileItem}>
             <Text style={styles.profileLabel}>Ongoing Project</Text>
