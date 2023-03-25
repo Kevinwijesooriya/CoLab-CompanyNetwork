@@ -6,16 +6,40 @@ import {
   Image,
   Linking,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { deleteUser } from '../../services/AuthService';
+import { deleteUser, updateUserProfile } from '../../services/AuthService';
 import { useNavigation } from '@react-navigation/native';
+import ImagePicker from 'react-native-image-crop-picker';
+import { uploadImage } from '../core/ImageUpload';
 
 const ProfileScreen = ({ route }) => {
   const navigation = useNavigation();
   const profile = route.params;
+  const [imgFile, setFile] = React.useState(null);
+
+  const handlePressImage = async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+      });
+      setFile(image);
+      const file = {
+        uri: image.path,
+        type: image.mime,
+      };
+      const imageUrl = await uploadImage(file);
+      console.log('Upload success', imageUrl);
+      await updateUserProfile(profile.uid, imageUrl);
+      console.log('Update profile info');
+    } catch (error) {
+      console.log('Upload error', error);
+    }
+  };
+
   const handlePressLinkedIn = async url => {
     await Linking.openURL(url);
   };
@@ -42,14 +66,17 @@ const ProfileScreen = ({ route }) => {
           <Text style={styles.profileName}>User Profile</Text>
         </View>
         <View style={styles.profileHeader}>
-          <Image
-            source={{
-              uri:
-                profile.imageUrl ||
-                'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
-            }}
-            style={styles.profileImage}
-          />
+          <TouchableOpacity onPress={() => handlePressImage()}>
+            <Image
+              source={{
+                uri:
+                  profile.imageUrl ||
+                  (imgFile !== null && imgFile.path) ||
+                  'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+              }}
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
           <View>
             <Text style={styles.profileName}>{profile.name}</Text>
             <Text style={styles.profilePosition}>{profile.position}</Text>

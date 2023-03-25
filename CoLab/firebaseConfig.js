@@ -2,6 +2,7 @@
 import {initializeApp} from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, initializeFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,6 +14,7 @@ const firebaseConfig = {
   storageBucket: 'colab-12dc4.appspot.com',
   messagingSenderId: '892654180043',
   appId: '1:892654180043:web:cd7c62a15f4a8d43c36d4e',
+  storageBucket: 'gs://colab-12dc4.appspot.com',
 };
 
 // Initialize Firebase
@@ -23,3 +25,4 @@ export const firestoreDB = initializeFirestore(firebaseApp, {
 });
 // export const firestoreDB = getFirestore(firebaseApp);
 export const firebaseAuth = getAuth(firebaseApp);
+export const storage = getStorage(firebaseApp);
