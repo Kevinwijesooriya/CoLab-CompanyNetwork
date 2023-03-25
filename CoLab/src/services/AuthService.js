@@ -132,6 +132,24 @@ export async function updateUser(userId, userData) {
     throw error;
   }
 }
+export async function updateUserProfile(userId, imageUrl) {
+  try {
+    const usersCollection = collection(firestoreDB, 'users');
+    const userQuery = query(usersCollection, where('uid', '==', userId));
+    const userSnapshot = await getDocs(userQuery);
+    if (userSnapshot.empty) {
+      throw new Error(`No user found with uid ${userId}.`);
+    }
+    const userDoc = userSnapshot.docs[0];
+    const userRef = doc(firestoreDB, 'users', userDoc.id);
+    const userData = { imageUrl };
+    await updateDoc(userRef, userData);
+    console.log(`User profile with uid ${userId} updated successfully.`);
+  } catch (error) {
+    console.error(`Error updating user profile with uid ${userId}: `, error);
+    throw error;
+  }
+}
 
 export async function deleteUser(uid) {
   try {
