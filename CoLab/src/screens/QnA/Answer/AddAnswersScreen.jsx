@@ -43,7 +43,7 @@ const AddAnswersScreen = ({ route }) => {
         console.log(profile.id)
         const response = await AddAnswer(profile.id  ,payload);
         console.log('Question added to Firestore', response);
-        navigation.navigate('QuestionScreen',profile);
+        navigation.navigate('QuestionsScreen');
       } catch (error) {
         setError('Error adding question to Firestore');
         console.error('Error adding question to Firestore: ', error);
