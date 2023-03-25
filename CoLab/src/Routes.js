@@ -16,6 +16,10 @@ import AddQuestionScreen from './screens/QnA/AddQuestionScreen';
 import UpdateQuestionScreen from './screens/QnA/UpdateQuestionScreen';
 import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
 // import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
+import AddPostScreen from './screens/post/AddPost';
+import ViewPostScreen from './screens/post/ViewPost';
+import PostScreen from './screens/post/PostScreen';
+import UpdatePostScreen from './screens/post/UpdatePost';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -112,6 +116,27 @@ const Routes = () => {
           component={AddAnswersScreen}
           options={Header}
         /> */}
+        <Stack.Screen
+          name="AddPostScreen"
+          component={AddPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ViewPostScreen"
+          component={ViewPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdatePostScreen"
+          component={UpdatePostScreen}
+          options={Header}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
