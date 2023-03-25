@@ -54,7 +54,7 @@ const UpdatePostScreen = ({ route }) => {
         }
         try {
             await updatePost(post.id, payload);
-            navigation.navigate('PostScreen', postData);
+            navigation.navigate('ViewPostScreen', postData);
         } catch (error) {
             setError('Update Failed');
         }
