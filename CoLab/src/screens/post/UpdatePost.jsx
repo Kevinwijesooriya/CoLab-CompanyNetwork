@@ -54,7 +54,7 @@ const UpdatePostScreen = ({ route }) => {
         }
         try {
             await updatePost(post.id, payload);
-            navigation.navigate('PostScreen', postData);
+            navigation.navigate('ViewPostScreen', postData);
         } catch (error) {
             setError('Update Failed');
         }
@@ -84,12 +84,13 @@ const UpdatePostScreen = ({ route }) => {
                 <TextInput
                     mode="outlined"
                     numberOfLines={4}
+                    multiline={true}
                     style={styles.input}
                     placeholder="Write here"
                     placeholderTextColor="#B5B5B5"
                     onChangeText={text => setText(text)}
                     value={text}
-                    autoCapitalize="none"
+                    autoCapitalize="sentences"
                     keyboardType="text"
                 />
                 <TouchableOpacity onPress={() => handlePressImage()}>
@@ -159,12 +160,15 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: '#EFEFEF',
         width: 327,
-        height: 45,
+        height: 'auto',
+        margin: 12,
+        padding: 10,
         fontSize: 16,
         paddingHorizontal: 10,
         paddingVertical: 8,
         borderRadius: 5,
         marginBottom: 30,
+        maxW: "300",
         color: '#323232',
     },
     error: {
