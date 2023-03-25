@@ -10,6 +10,10 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import AddPostScreen from './screens/post/AddPost';
+import ViewPostScreen from './screens/post/ViewPost';
+import PostScreen from './screens/post/PostScreen';
+import UpdatePostScreen from './screens/post/UpdatePost';
 import MemberUpdateScreen from './screens/members/MemberUpdateScreen';
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +42,7 @@ const Routes = () => {
       <Stack.Navigator>
         <Stack.Screen
           name="HomeScreen"
-          component={MembersScreen}
+          component={ViewPostScreen}
           options={Header('Home')}
           //   options={{ headerShown: false }}
         />
@@ -80,6 +84,26 @@ const Routes = () => {
         <Stack.Screen
           name="MemberUpdateScreen"
           component={MemberUpdateScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="AddPostScreen"
+          component={AddPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ViewPostScreen"
+          component={ViewPostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdatePostScreen"
+          component={UpdatePostScreen}
           options={Header}
         />
       </Stack.Navigator>
