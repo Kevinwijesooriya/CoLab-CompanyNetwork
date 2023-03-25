@@ -10,6 +10,10 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import ViewAllProjects from './screens/projects/ViewAllProjects';
+import NewProject from './screens/projects/AddProjectScreen';
+import ProjectScreen from './screens/projects/projectScreen';
+import UpdateProjectScreen from './screens/projects/UpdateProject';
 import AddPostScreen from './screens/post/AddPost';
 import ViewPostScreen from './screens/post/ViewPost';
 import PostScreen from './screens/post/PostScreen';
@@ -84,6 +88,26 @@ const Routes = () => {
         <Stack.Screen
           name="MemberUpdateScreen"
           component={MemberUpdateScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ProjectScreen"
+          component={ProjectScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="NewProject"
+          component={NewProject}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdateProjectScreen"
+          component={UpdateProjectScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="ViewAllProjects"
+          component={ViewAllProjects}
           options={Header}
         />
         <Stack.Screen
