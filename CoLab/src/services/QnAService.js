@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firestoreDB } from "../../firebaseConfig";
 
 export const AddQuestion = async payload => {
@@ -86,13 +86,35 @@ export const AddQuestion = async payload => {
         throw error;
       }
     }
-    // export async function deleteUser(uid) {
-    //   try {
-    //     const userRef = doc(db, "users", uid);
-    //     await deleteDoc(userRef);
-    //     console.log(`User with uid ${uid} deleted successfully.`);
-    //   } catch (error) {
-    //     console.error(`Error deleting user with uid ${uid}: `, error);
-    //     throw error;
-    //   }
-    // }
+    export async function deleteQuestion(id) {
+      try {
+        const userRef = doc(firestoreDB, "questions", id);
+        await deleteDoc(userRef);
+        console.log(`User with id ${id} deleted successfully.`);
+      } catch (error) {
+        console.error(`Error deleting user with id ${id}: `, error);
+        throw error;
+      }
+    }
+
+
+    export  async function AddAnswer(id, dataToUpdate) {
+
+      const answerRef = doc(firestoreDB, "questions", id);
+    
+    // Atomically add a new region to the "regions" array field.
+    // await updateDoc(answerRef, {
+    //     answers : arrayUnion(dataToUpdate)
+    // });
+    
+      try {
+        await updateDoc(answerRef, {
+          answers : arrayUnion(dataToUpdate)
+      });
+        console.log(`Answer updated successfully.`);
+      } catch (error) {
+        console.error(`Error updating project with uid ${pId}: `, error);
+        throw error;
+      }
+    
+        }

@@ -1,7 +1,15 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { firestoreDB } from "../../firebaseConfig";
 
 export const AddAnswer = async payload => {
+
+  const washingtonRef = doc(firestoreDB, "cities", "DC");
+
+// Atomically add a new region to the "regions" array field.
+await updateDoc(washingtonRef, {
+    regions: arrayUnion("greater_virginia")
+});
+
     const { answer,uid,Qid } = payload;
      try {
       const usersCollection = collection(firestoreDB, 'users');

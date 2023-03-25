@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
-import { AddAnswer } from '../../../services/AnswerService';
+import { AddAnswer } from '../../../services/QnAService';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { firestoreDB } from '../../../../firebaseConfig';
 
 const AddAnswersScreen = ({ route }) => {
   console.log("🚀 ~ file: AddAnswersScreen.jsx:14 ~ AddAnswersScreen ~ route:", route.params)
@@ -23,13 +25,23 @@ const AddAnswersScreen = ({ route }) => {
     const navigation = useNavigation();
   
     const handleAddQuestion = async () => {
+      const usersCollection = collection(firestoreDB, 'users');
+      const userQuery = query(usersCollection, where('uid', '==', uid));
+      const userSnapshot = await getDocs(userQuery);
+      if (userSnapshot.empty) {
+        throw new Error(`No user found with uid ${uid}.`);
+      }
+      const userDoc = userSnapshot.docs[0];
       let payload = {
         uid,
+        username:userDoc.data().name,
         answer,
-        Qid:"2FkU2QAuxCiUYTlrqifJ",
       };
+      {profile.answers&&profile.answers.push(payload)}
+      
       try {
-        const response = await AddAnswer(payload);
+        console.log(profile.id)
+        const response = await AddAnswer(profile.id  ,payload);
         console.log('Question added to Firestore', response);
         navigation.navigate('QuestionScreen',profile);
       } catch (error) {
@@ -44,6 +56,7 @@ const AddAnswersScreen = ({ route }) => {
           </View>
           <View style={styles.container}>
             <Text style={styles.title}>Add Your Answer</Text>
+            <Text style={styles.profileLabel}>{profile.question}</Text>
             <TextInput
               style={styles.input}
               placeholder="Answer"
@@ -122,6 +135,13 @@ const styles = StyleSheet.create({
       color: '#fff',
       fontSize: 16,
       fontWeight: 'bold',
+    },
+    profileLabel: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      width: '40%',
+      fontFamily: 'Hind Mysuru',
+      color: '#323232',
     },
   });
 export default AddAnswersScreen

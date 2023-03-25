@@ -57,7 +57,7 @@ const QuestionsScreen = () => {
     <>
       <FloatingButton
         text="Add Question"
-        icon="addquestion"
+        icon="addfile"
         navigateTo="AddQuestionScreen"
       />
 
