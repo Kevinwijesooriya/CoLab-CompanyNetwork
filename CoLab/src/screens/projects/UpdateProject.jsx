@@ -78,7 +78,7 @@ const UpdateProjectScreen = ({ route }) => {
       </View>
       <View style={styles.container}>
         <Text style={styles.title}>Update Project</Text>
-        <Text style={styles.label}>Name</Text>
+        {/* <Text style={styles.label}>Name</Text>
         <TextInput
           mode="outlined"
           style={styles.input}
@@ -88,8 +88,8 @@ const UpdateProjectScreen = ({ route }) => {
           value={projectName}
           autoCapitalize="none"
           keyboardType="email-address"
-        />
-       <Text style={styles.label}>Estimated Time</Text>
+        /> */}
+        <Text style={styles.label}>Estimated Time</Text>
         <TextInput
           style={styles.input}
           placeholder="Estimated Time"
@@ -99,7 +99,7 @@ const UpdateProjectScreen = ({ route }) => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-         <Text style={styles.label}>Technologies</Text>
+        <Text style={styles.label}>Technologies</Text>
         <TextInput
           style={styles.input}
           placeholder="Technologies"
@@ -109,8 +109,8 @@ const UpdateProjectScreen = ({ route }) => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-         <Text style={styles.label}>Team Members</Text>
-         <TextInput
+        <Text style={styles.label}>Team Members</Text>
+        <TextInput
           style={styles.input}
           placeholder="Team Members"
           placeholderTextColor="#B5B5B5"
@@ -129,7 +129,7 @@ const UpdateProjectScreen = ({ route }) => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-        <Text style={styles.label}>ProjectStatus</Text>
+        <Text style={styles.label}>Project Status</Text>
         <TextInput
           style={styles.input}
           placeholder="ProjectStatus"
@@ -139,7 +139,7 @@ const UpdateProjectScreen = ({ route }) => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-        <Text style={styles.label}>Clinent</Text>
+        <Text style={styles.label}>Client</Text>
         <TextInput
           style={styles.input}
           placeholder="Clinent"
