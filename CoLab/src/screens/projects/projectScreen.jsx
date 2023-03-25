@@ -6,18 +6,20 @@ import {
   Image,
   Linking,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { deleteUser, updateUserProfile } from '../../services/AuthService';
+import { deleteProject , updateProjectImage } from '../../services/ProjectService';
 import { useNavigation } from '@react-navigation/native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage } from '../core/ImageUpload';
 
-const ProfileScreen = ({ route }) => {
+const ProjectScreen = ({ route }) => {
   const navigation = useNavigation();
-  const profile = route.params;
+  const projectProfile = route.params;
   const [imgFile, setFile] = React.useState(null);
+  console.log(projectProfile)
 
   const handlePressImage = async () => {
     try {
@@ -31,23 +33,20 @@ const ProfileScreen = ({ route }) => {
         uri: image.path,
         type: image.mime,
       };
-      const imageUrl = await uploadImage(file);
-      console.log('Upload success', imageUrl);
-      setFile(imageUrl);
-      await updateUserProfile(profile.uid, imageUrl);
+      const img = await uploadImage(file);
+      console.log('Upload success', img);
+      await updateProjectImage(projectProfile.id, img);
       console.log('Update profile info');
     } catch (error) {
       console.log('Upload error', error);
     }
   };
 
-  const handlePressLinkedIn = async url => {
-    await Linking.openURL(url);
-  };
-  const handlePressRemove = async uid => {
+
+  const handlePressRemove = async pid => {
     try {
-      await deleteUser(uid);
-      navigation.navigate('MembersScreen');
+      await deleteProject(pid);
+      navigation.navigate('ViewAllProjects');
     } catch (error) {
       console.log('Ops! Something Went Wrong', error);
     }
@@ -58,52 +57,51 @@ const ProfileScreen = ({ route }) => {
       <FloatingButton
         text="Change Details"
         icon="edit"
-        navigateTo="MemberUpdateScreen"
-        params={profile}
-      
+        navigateTo="UpdateProjectScreen"
+        params={projectProfile.id}
       />
       <View style={styles.container}>
         <View style={styles.profileHeader}>
-          <Text style={styles.profileName}>User Profile</Text>
+          <Text style={styles.profileName}>{projectProfile.projectName} Project</Text>
         </View>
         <View style={styles.profileHeader}>
-          <TouchableOpacity onPress={() => handlePressImage()}>
+        <TouchableOpacity onPress={() => handlePressImage()}>
             <Image
               source={{
                 uri:
-                  profile.imageUrl ||
+                projectProfile.img ||
                   (imgFile !== null && imgFile.path) ||
-                  'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+                  'https://firebasestorage.googleapis.com/v0/b/colab-12dc4.appspot.com/o/undraw_Growth_analytics_re_pyxf.png?alt=media&token=9c1b3987-cbb0-4ea2-a341-3df2376e2242',
               }}
               style={styles.profileImage}
             />
           </TouchableOpacity>
           <View>
-            <Text style={styles.profileName}>{profile.name}</Text>
-            <Text style={styles.profilePosition}>{profile.position}</Text>
+            <Text style={styles.profileName}>{projectProfile.description}</Text>
+            <Text style={styles.profilePosition}>{projectProfile.technologies}</Text>
           </View>
         </View>
         <View style={styles.profileDetails}>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>Email</Text>
-            <Text style={styles.profileValue}>{profile.email}</Text>
+            <Text style={styles.profileLabel}>Team Members</Text>
+            <Text style={styles.profileValue}>{projectProfile.teamMembers}</Text>
           </View>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>Ongoing Project</Text>
-            <Text style={styles.profileValue}>{profile.project}</Text>
+            <Text style={styles.profileLabel}>Estimated Time Duration</Text>
+            <Text style={styles.profileValue}>{projectProfile.estimatedTime}</Text>
           </View>
           <View style={styles.profileItem}>
-            <TouchableOpacity
-              style={styles.profileItemSocial}
-              onPress={() => handlePressLinkedIn(profile.linkedIn)}>
-              <Text style={styles.profileLabel}>LinkedIn Profile</Text>
-              <Icon name="linkedin-square" size={24} color="#0077b5" />
-            </TouchableOpacity>
+            <Text style={styles.profileLabel}>Project Status</Text>
+            <Text style={styles.profileValue}>{projectProfile.projectStatus}</Text>
+          </View>
+          <View style={styles.profileItem}>
+          <Text style={styles.profileLabel}>client</Text>
+          <Text style={styles.profileValue}>{projectProfile.clinent}</Text>
           </View>
           <View style={styles.profileItemRemove}>
             <TouchableOpacity
               style={styles.profileItemTouchRemove}
-              onPress={() => handlePressRemove(profile.uid)}>
+              onPress={() => handlePressRemove(projectProfile.id)}>
               <Text style={styles.profileLabelRemove}>Remove </Text>
               <Icon name="deleteuser" size={24} color="#fff" />
             </TouchableOpacity>
@@ -131,13 +129,13 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   profileImage: {
-    width: 150,
+    width: 350,
     height: 150,
-    borderRadius: 75,
-    marginBottom: 20,
+    borderRadius: 10,
+
   },
   profileName: {
-    fontSize: 24,
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 5,
     fontFamily: 'Hind Mysuru',
@@ -164,6 +162,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
   },
+  profileItemSocial: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  profileLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    width: '40%',
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
+  },
+  profileValue: {
+    fontSize: 18,
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
+  },
   profileItemRemove: {
     padding: 16,
     marginBottom: 16,
@@ -185,22 +204,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: 'red',
   },
-  profileItemSocial: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  profileLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    width: '40%',
-    fontFamily: 'Hind Mysuru',
-    color: '#323232',
-  },
   profileLabelRemove: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -208,11 +211,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Hind Mysuru',
     color: '#fff',
   },
-  profileValue: {
-    fontSize: 18,
-    fontFamily: 'Hind Mysuru',
-    color: '#323232',
-  },
 });
 
-export default ProfileScreen;
+export default ProjectScreen;
