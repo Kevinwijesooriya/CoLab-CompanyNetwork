@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { fetchProject, updateProject } from '../../services/ProjectService';
+import { useNavigation } from '@react-navigation/native';
 
 const UpdateProjectScreen = ({ route }) => {
   console.log(
@@ -25,6 +26,7 @@ const UpdateProjectScreen = ({ route }) => {
   const [projectStatus, setProjectStatus] = useState('');
   const [clinent, setClinent] = useState('');
   const [error, setError] = useState(null);
+  const navigation = useNavigation();
 
   const handleAddProject = async () => {
     let payload = {
@@ -36,7 +38,12 @@ const UpdateProjectScreen = ({ route }) => {
         projectStatus,
         clinent,
     };
-    updateProject(pid, payload);
+    try{
+    await updateProject(pid, payload);
+    navigation.navigate('ViewAllProjects');
+  } catch (error) {
+    setError('Update Failed');
+  }
   };
   React.useEffect(() => {
     async function fetchProjects() {

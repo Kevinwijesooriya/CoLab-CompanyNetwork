@@ -11,8 +11,10 @@ import {
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseApp } from '../../../firebaseConfig';
 import { AddProject } from '../../services/ProjectService';
+import { useNavigation } from '@react-navigation/native';
 
 const AddProjectScreen = () => {
+  const navigation = useNavigation();
   const auth = getAuth(firebaseApp);
   const [projectName, setProjectName] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
@@ -34,7 +36,13 @@ const AddProjectScreen = () => {
       projectStatus,
       clinent,
     };
-    AddProject(payload);
+    try{
+      await AddProject(payload);
+      navigation.navigate('ViewAllProjects');
+    }catch (error) {
+      setError('Ops! Something Went Wrong');
+    }
+   
   };
 
   return (

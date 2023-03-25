@@ -10,6 +10,7 @@ import {
 import FloatingButton from '../core/components/FloatingButton';
 import { useNavigation } from '@react-navigation/native';
 import { fetchProjects } from '../../services/ProjectService';
+import { useIsFocused } from '@react-navigation/core';
 
 const MembersScreen = () => {
   const projectInitialState = [
@@ -21,13 +22,14 @@ const MembersScreen = () => {
         description: 'description',
         projectStatus: 'projectStatus',
         clinent: 'clinent',
-        // imageUrl:
-        // 'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
+        img:
+        'https://firebasestorage.googleapis.com/v0/b/colab-12dc4.appspot.com/o/undraw_Growth_analytics_re_pyxf.png?alt=media&token=9c1b3987-cbb0-4ea2-a341-3df2376e2242',
     },
   ];
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [projects, setProject] = React.useState(projectInitialState);
-  React.useEffect(() => {
+
     async function fetchMembers() {
       try {
         const projectArray = await fetchProjects();
@@ -37,9 +39,13 @@ const MembersScreen = () => {
         console.error('Error fetching project: ', error);
       }
     }
-
+    React.useEffect(() => {
     fetchMembers();
   }, []);
+
+  React.useEffect(() => {
+    fetchMembers();
+  }, [isFocused]);
 
   const handleCardPress = project => {
     navigation.navigate('ProjectScreen', project);
@@ -47,7 +53,14 @@ const MembersScreen = () => {
   const Card = ({ project }) => (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => handleCardPress(project)}>
-        {/* <Image source={{ uri: project.imageUrl }} style={styles.cardImage} /> */}
+      <Image
+          source={{
+            uri:
+            project.img ||
+              'https://firebasestorage.googleapis.com/v0/b/colab-12dc4.appspot.com/o/undraw_Growth_analytics_re_pyxf.png?alt=media&token=9c1b3987-cbb0-4ea2-a341-3df2376e2242 ',
+          }}
+          style={styles.cardImage}
+        />
         <Text style={styles.cardTitle}>{project.projectName}</Text>
         <Text style={styles.cardSubtitle}>{project.estimatedTime}</Text>
         <Text style={styles.cardSubtitle}>{project.technologies}</Text>

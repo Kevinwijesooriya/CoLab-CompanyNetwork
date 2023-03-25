@@ -138,6 +138,19 @@ import {
     }
   }
   
+
+  export async function updateProjectImage(pId, img) {
+    try {
+      const projectDoc = doc(firestoreDB, 'project', pId);
+      const userData = { img };
+      await updateDoc(projectDoc, userData);
+      console.log(`Project with pid ${pId} updated successfully.`);
+    } catch (error) {
+      console.error(`Error updating project with uid ${pId}: `, error);
+      throw error;
+    }
+  }
+
   export async function deleteProject(pid) {
     try {
       const projectRef = doc(firestoreDB, "project", pid);

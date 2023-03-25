@@ -10,13 +10,39 @@ import {
 } from 'react-native';
 import FloatingButton from '../core/components/FloatingButton';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { deleteProject } from '../../services/ProjectService';
+import { deleteProject , updateProjectImage } from '../../services/ProjectService';
 import { useNavigation } from '@react-navigation/native';
+import ImagePicker from 'react-native-image-crop-picker';
+import { uploadImage } from '../core/ImageUpload';
 
 const ProjectScreen = ({ route }) => {
   const navigation = useNavigation();
   const projectProfile = route.params;
+  const [imgFile, setFile] = React.useState(null);
   console.log(projectProfile)
+
+  const handlePressImage = async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+      });
+      setFile(image);
+      const file = {
+        uri: image.path,
+        type: image.mime,
+      };
+      const img = await uploadImage(file);
+      console.log('Upload success', img);
+      await updateProjectImage(projectProfile.id, img);
+      console.log('Update profile info');
+    } catch (error) {
+      console.log('Upload error', error);
+    }
+  };
+
+
   const handlePressRemove = async pid => {
     try {
       await deleteProject(pid);
@@ -39,10 +65,17 @@ const ProjectScreen = ({ route }) => {
           <Text style={styles.profileName}>{projectProfile.projectName} Project</Text>
         </View>
         <View style={styles.profileHeader}>
-          <Image
-            source={{ uri: projectProfile.imageUrl }}
-            style={styles.profileImage}
-          />
+        <TouchableOpacity onPress={() => handlePressImage()}>
+            <Image
+              source={{
+                uri:
+                projectProfile.img ||
+                  (imgFile !== null && imgFile.path) ||
+                  'https://firebasestorage.googleapis.com/v0/b/colab-12dc4.appspot.com/o/undraw_Growth_analytics_re_pyxf.png?alt=media&token=9c1b3987-cbb0-4ea2-a341-3df2376e2242',
+              }}
+              style={styles.profileImage}
+            />
+          </TouchableOpacity>
           <View>
             <Text style={styles.profileName}>{projectProfile.description}</Text>
             <Text style={styles.profilePosition}>{projectProfile.technologies}</Text>
@@ -96,10 +129,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   profileImage: {
-    width: 150,
+    width: 350,
     height: 150,
-    borderRadius: 75,
-    marginBottom: 20,
+    borderRadius: 10,
+
   },
   profileName: {
     fontSize: 17,
