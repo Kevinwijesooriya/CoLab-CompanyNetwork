@@ -71,8 +71,8 @@ const ProfileScreen = ({ route }) => {
             <Image
               source={{
                 uri:
+                  (imgFile !== null && imgFile) ||
                   profile.imageUrl ||
-                  (imgFile !== null && imgFile.path) ||
                   'http://drive.google.com/uc?export=view&id=1k11P0jqhLZFSGOFMXSSZizd7QrRr_K5J',
               }}
               style={styles.profileImage}
