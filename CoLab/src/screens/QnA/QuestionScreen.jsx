@@ -1,90 +1,144 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Linking,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import FloatingButton from '../core/components/FloatingButton';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { useNavigation } from '@react-navigation/native';
 
-const questions = [
-  {
-    question: 'Are you hungry?',
-    reply: [
-      {
-        name: 'Kevin Wijesuriya',
-        answer: 'Yaaaaah',
-      },
-      {
-        name: 'Kevin Wijesuriya',
-        answer: 'Yaaaaah',
-      },
-    ],
-    imageUrl:
-      'https://www.google.com/search?q=question+img&sxsrf=AJOqlzUahBwvGh4DH7k7uVKFAnvQSFjpzg:1679565833480&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjrpYan5vH9AhXV4DgGHVkNB90Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=gyoWJ1UAWlubVM',
-  },
-  {
-    question: 'Are you hungry?',
-    reply: [
-      {
-        name: 'Kevin Wijesuriya',
-        answer: 'Yaaaaah',
-      },
-      {
-        name: 'Kevin Wijesuriya',
-        answer: 'Yaaaaah',
-      },
-    ],
-    // imageUrl:
-    // 'http://drive.google.com/uc?export=view&id=1ppXO876d0MzXfLJVmXazY5ZWx41yentN',
-  },
-];
-const QuestionScreen = () => {
+const ProfileScreen = ({ route }) => {
+    const navigation = useNavigation();
+  console.log(
+    '🚀 ~ file: ProfileScreen.jsx:6 ~ ProfileScreen ~ props:',
+    route.params,
+  );
+  const profile = route.params;
+  const handlePress = async url => {
+    await Linking.openURL(url);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      {questions.map((post, index) => (
-        <View key={index} style={styles.postContainer}>
-            {post.imageUrl&&
-          <Image source={{ uri: post.imageUrl }} style={styles.image} />}
-          <Text style={styles.question}>{post.question}</Text>
-          {post.reply.map((reply, index) => (
-            <View key={index} style={styles.replyContainer}>
-              <Text style={styles.name}>{reply.name}</Text>
-              <Text style={styles.answer}>{reply.answer}</Text>
-            </View>
-          ))}
+    <>
+      <FloatingButton
+        text="Add Answers"
+        icon="edit"
+        navigateTo="AddAnswersScreen"
+        // params={profile.question}
+      />
+      <View style={styles.container}>
+        <View style={styles.profileHeader}>
+          <Text style={styles.profileName}>User Profile</Text>
         </View>
-      ))}
-    </ScrollView>
+        <View style={styles.profileHeader}>
+          <Image
+            source={{ uri: profile.imageUrl }}
+            style={styles.profileImage}
+          />
+          <View>
+            <Text style={styles.profileName}>{profile.name}</Text>
+            <Text style={styles.profilePosition}>{profile.position}</Text>
+          </View>
+        </View>
+        <View style={styles.profileDetails}>
+          <View style={styles.profileItem}>
+            {/* <Text style={styles.profileLabel}>Email</Text> */}
+            <Text style={styles.profileValue}>{profile.question}</Text>
+          </View>
+          <View style={styles.profileItem}>
+            <Text style={styles.profileLabel}>Ongoing Project</Text>
+            <Text style={styles.profileValue}>{profile.project}</Text>
+          </View>
+          <View style={styles.profileItem}>
+            <TouchableOpacity
+              style={styles.profileItemSocial}
+              onPress={() => handlePress(profile.linkedIn)}>
+              <Text style={styles.profileLabel}>LinkedIn Profile</Text>
+              <Icon name="linkedin-square" size={24} color="#0077b5" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
   },
-  postContainer: {
+  profileHeader: {
+    padding: 16,
+    margin: 16,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // width: '100%',
+    borderRadius: 8,
     backgroundColor: '#fff',
-    padding: 10,
-    marginBottom: 10,
+    elevation: 2,
   },
-  image: {
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 20,
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
+  },
+  profilePosition: {
+    fontSize: 18,
+    color: '#999999',
+  },
+  profileDetails: {
+    padding: 20,
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
+  },
+  profileItem: {
+    padding: 16,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
-    height: 200,
-    resizeMode: 'cover',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    elevation: 2,
   },
-  question: {
+  profileItemSocial: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  profileLabel: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 10,
+    width: '40%',
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
   },
-  replyContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  name: {
-    fontWeight: 'bold',
-    marginRight: 5,
-  },
-  answer: {
-    flex: 1,
+  profileValue: {
+    fontSize: 18,
+    fontFamily: 'Hind Mysuru',
+    color: '#323232',
   },
 });
 
-export default QuestionScreen;
+export default ProfileScreen;

@@ -10,7 +10,11 @@ import { Header } from './screens/core/components/Header';
 import NewMemberScreen from './screens/auth/NewMemberScreen';
 import MembersScreen from './screens/members/MembersScreen';
 import ProfileScreen from './screens/members/ProfileScreen';
+import QuestionsScreen from './screens/QnA/QuestionsScreen';
 import QuestionScreen from './screens/QnA/QuestionScreen';
+import AddQuestionScreen from './screens/QnA/AddQuestionScreen';
+import UpdateQuestionScreen from './screens/QnA/UpdateQuestionScreen';
+// import AddAnswersScreen from './screens/QnA/Answer/AddAnswersScreen';
 const Stack = createNativeStackNavigator();
 
 const Routes = () => {
@@ -38,7 +42,7 @@ const Routes = () => {
       <Stack.Navigator>
         <Stack.Screen
           name="Initial"
-          component={QuestionScreen}
+          component={QuestionsScreen}
           options={Header}
           //   options={{ headerShown: false }}
         />
@@ -78,10 +82,30 @@ const Routes = () => {
           options={Header}
         />
         <Stack.Screen
+          name="QuestionsScreen"
+          component={QuestionsScreen}
+          options={Header}
+        />
+        <Stack.Screen
+          name="UpdateQuestionScreen"
+          component={UpdateQuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
+          name="AddQuestionScreen"
+          component={AddQuestionScreen}
+          options={Header}
+        />
+      <Stack.Screen
           name="QuestionScreen"
           component={QuestionScreen}
           options={Header}
         />
+        {/* <Stack.Screen
+          name="AddAnswersScreen"
+          component={AddAnswersScreen}
+          options={Header}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

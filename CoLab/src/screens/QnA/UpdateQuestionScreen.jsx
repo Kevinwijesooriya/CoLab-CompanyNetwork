@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { getAuth } from "firebase/auth";
-import { useNavigation } from '@react-navigation/native';
 import {
   StyleSheet,
   Text,
@@ -9,30 +7,36 @@ import {
   View,
   Image,
 } from 'react-native';
-import { AddQuestion } from '../../services/QnAService';
+import { getQuestionById, updateQuestion } from '../../services/QnAService';
 
-const AddQuestionScreen = () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const uid = user.uid;
+const UpdateQuestionScreen = ({ route }) => {
+  console.log(
+    '🚀 ~ file: UpdateQuestionScreen.jsx:14 ~ UpdateQuestionScreen ~ route.params:',
+    route.params,
+  );
+  const uid = route.params;
+
   const [question, setQuestion] = useState('');
-  const navigation = useNavigation();
   const [error, setError] = useState(null);
 
   const handleAddQuestion = async () => {
     let payload = {
-      uid,
-      question,
+        question
     };
-    try {
-      const response = await AddQuestion(payload);
-      console.log('Question added to Firestore', response);
-      navigation.navigate('QuestionsScreen');
-    } catch (error) {
-      setError('Error adding question to Firestore');
-      console.error('Error adding question to Firestore: ', error);
-    }
+    updateQuestion(uid, payload);
   };
+  React.useEffect(() => {
+    async function fetchQuestion() {
+      try {
+        const questionsArray = await getQuestionById(uid);
+        setQuestion(questionsArray.question);
+      } catch (error) {
+        console.error('Error fetching questions: ', error);
+      }
+    }
+
+    fetchQuestion();
+  }, []);
 
   return (
     <>
@@ -40,8 +44,10 @@ const AddQuestionScreen = () => {
         <Image source={require('../../assets/Team.png')} style={styles.image} />
       </View>
       <View style={styles.container}>
-        <Text style={styles.title}>New Question</Text>
+        <Text style={styles.title}>Update Question</Text>
+        <Text style={styles.label}>Question</Text>
         <TextInput
+          mode="outlined"
           style={styles.input}
           placeholder="Question"
           placeholderTextColor="#B5B5B5"
@@ -50,11 +56,10 @@ const AddQuestionScreen = () => {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-    
-       
+        
         {error && <Text style={styles.error}>{error}</Text>}
         <TouchableOpacity style={styles.button} onPress={handleAddQuestion}>
-          <Text style={styles.buttonText}>Add</Text>
+          <Text style={styles.buttonText}>Save Changes</Text>
         </TouchableOpacity>
       </View>
     </>
@@ -63,7 +68,7 @@ const AddQuestionScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 4,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -90,6 +95,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff90',
     marginBottom: 38,
     borderRadius: 5,
+  },
+  label: {
+    fontFamily: 'Hind Mysuru',
+    fontSize: 12,
+    fontWeight: '300',
+    fontStyle: 'normal',
+    lineHeight: 12,
+    letterSpacing: 0.5,
+    color: '#B5B5B5',
+    borderRadius: 5,
+    width: 327,
+    paddingHorizontal: 10,
   },
   input: {
     backgroundColor: '#EFEFEF',
@@ -123,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddQuestionScreen;
+export default UpdateQuestionScreen;
